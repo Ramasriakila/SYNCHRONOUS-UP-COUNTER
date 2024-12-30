@@ -38,101 +38,65 @@ Developed by:RAMASRI K
 
 RegisterNumber:24007403
 
-```
-moduleSUC(
+module ripple (
 
-input clk,//Clock signal
+input clk,     // Clock input
+    
+input reset,   // Reset input (active high)
 
-input rst,//Reset signal (active high)
-
-output[3:0] q // 4-bit output
-
-);
-
-wire [3,0]j,k;//J and  K inputs for each JK flipflop
-
-wire [3,0] t;//Toggle signal for each stage
-
-//Generate the toggle signals for each stage
-
-assign j[0] = 1'b1;//First flip-flop togggles on every clock pulse
-
-assign k[0] = 1'b1;
-
-assign t[0] = q[0];//Output of the first flip-flop
-
-assign j[1] = q[0];//Second flip-flop toggles on q[0] high
-
-assign k[1] = q[0];
-
-assign t[1] = q[1];
-
-assign j[2] = q[0] & q[1];//Third flip-flop toggles on q[1:0] high
-
-assign k[2] = q[0] & q[1];
-
-assign t[2] = q[2];
-
-assign j[3] = q[0] & q[1] &q[2];//Fourth flip-flop toggles on q[2:0] high
-
-assign k[3] = q[0] & q[1] & q[2];
-
-assign t[3] = q[3]];
-
-//instantiate 4 JK flip-flops
-
-jk_flipflop jk0 (.clk(clk),.rst(rst),.j(j[0]),.k(k[0]),.q(q[0]));
-
-jk_flipflop jk1 (.clk(clk),.rst(rst),.j(j[1]),.k(k[1]),.q(q[1]));
-
-jk_flipflop jk2 (.clk(clk),.rst(rst),.j(j[2]),.k(k[2]),.q(q[2]));
-
-jk_flipflop jk3 (.clk(clk),.rst(rst),.j(j[3]),.k(k[3]),.q(q[3]));
-
-endmodule
-
-// JK flip-flop module
-
-module jk_flipflop(
-
-input clk,// Clock signal
-
-input rst,// Reset signal (active high)
-
-input j,// J input
-
-input k,// K input
-
-output reg q // Q output
+output [3:0] q // 4-bit output
 
 );
 
-always @(posedge clk or posedge rst)begin
+// Internal signals for flip-flops
+    
+reg [3:0] q_int;
 
-if(rst) begin
+// Assign internal register to output
+    
+assign q = q_int;
 
-q <= 1'b0;// Reset output to 0
+always @(posedge clk or posedge reset) begin
+       
+if (reset) 
+        
+q_int[0] <= 1'b0; // Reset the first bit to 0
+        
+ else 
+           
+ q_int[0] <= ~q_int[0]; // Toggle the first bit on clock edge
+    
+ end
 
-end else begin
+ // Generate the other flip-flops based on the output of the previous one
+    
+  genvar i;
+    
+  generate
+        
+  for (i = 1; i < 4; i = i + 1) begin : ripple
+            
+  always @(posedge q_int[i-1] or posedge reset) begin
+                
+  if (reset) 
+                    
+  q_int[i] <= 1'b0; // Reset the bit to 0
+                
+  else 
+                    
+   q_int[i] <= ~q_int[i]; // Toggle the bit on clock edge of previous stage
+           
+   end
+        
+   end
+    
+   endgenerate
 
-case ({j,k})
 
-2'b00; q <= q;//No change
+   endmodule
 
-2'b01; q <= 1'b0;//Reset
 
-2'b10; q <= 1'b1;//Set
 
-2'b11; q <= ~q;//Toggle
-
-endcase
-
-end
-
-end
-
-endmodule
-``` 
 
 RTL LOGIC UP COUNTER**
 
