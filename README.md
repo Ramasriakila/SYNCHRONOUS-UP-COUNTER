@@ -39,7 +39,7 @@ Developed by:RAMASRI K
 RegisterNumber:24007403
 
 ```
-module SUC (
+moduleSUC(
 
 input clk,//Clock signal
 
