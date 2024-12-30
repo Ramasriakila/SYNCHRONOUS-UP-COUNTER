@@ -37,7 +37,7 @@ However, the remaining flip-flops should be made ready to toggle only when all l
 Developed by:RAMASRI K
 
 RegisterNumber:24007403
-
+```
 module ripple (
 
 input clk,     // Clock input
@@ -95,7 +95,7 @@ q_int[0] <= 1'b0; // Reset the first bit to 0
 
    endmodule
 
-
+```
 
 
 RTL LOGIC UP COUNTER**
