@@ -140,6 +140,7 @@ RTL LOGIC UP COUNTER**
 
 
 **TIMING DIAGRAM FOR IP COUNTER**
+
 ![Screenshot 2024-12-23 081355](https://github.com/user-attachments/assets/14f2d644-1b26-4c6e-b836-ee80f463672f)
 
 
